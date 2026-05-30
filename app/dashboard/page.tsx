@@ -4,7 +4,9 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import useSWR, { mutate } from "swr";
 import cookies from "js-cookie";
-import { LogOut, Plus, FileText, ClipboardList, Clock, CheckCircle2, XCircle } from "lucide-react";
+import { Header } from "@/components/Header";
+import { PermitForm } from "@/components/PermitForm";
+import { PermitList } from "@/components/PermitList";
 
 interface UserSession {
   id: string;
@@ -123,61 +125,7 @@ export default function DashboardPage() {
 
   return (
     <div style={{ minHeight: "100vh", paddingBottom: "64px" }}>
-      <header style={{
-        background: "rgba(255, 255, 255, 0.01)",
-        backdropFilter: "blur(12px)",
-        borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
-        position: "sticky",
-        top: 0,
-        zIndex: 50
-      }}>
-        <div className="premium-container" style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "16px 24px"
-        }}>
-          <div>
-            <h2 style={{ fontSize: "20px", fontWeight: 700 }}>
-              <span className="gradient-text">E-Permit Portal</span>
-            </h2>
-          </div>
-
-          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-            <div style={{ textAlign: "right" }}>
-              <p style={{ fontSize: "14px", fontWeight: 600 }}>{session.username}</p>
-              <p style={{
-                fontSize: "11px",
-                color: isAdmin ? "hsl(var(--primary))" : "hsl(var(--success))",
-                fontWeight: 700,
-                textTransform: "uppercase"
-              }}>
-                {session.role}
-              </p>
-            </div>
-            <button
-              onClick={handleLogout}
-              style={{
-                background: "rgba(239, 68, 68, 0.1)",
-                color: "hsl(var(--destructive))",
-                border: "1px solid rgba(239, 68, 68, 0.2)",
-                padding: "8px 14px",
-                borderRadius: "8px",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                fontSize: "13px",
-                fontWeight: 600,
-                transition: "all 0.2s"
-              }}
-            >
-              <LogOut size={14} />
-              Keluar
-            </button>
-          </div>
-        </div>
-      </header>
+      <Header session={session} isAdmin={isAdmin} onLogout={handleLogout} />
 
       <main className="premium-container" style={{ marginTop: "32px" }}>
         <div style={{
@@ -187,212 +135,26 @@ export default function DashboardPage() {
           alignItems: "start"
         }}>
           {!isAdmin && (
-            <section className="premium-card">
-              <h3 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "20px", display: "flex", alignItems: "center", gap: "8px" }}>
-                <Plus size={18} style={{ color: "hsl(var(--primary))" }} />
-                Buat Izin Baru
-              </h3>
-
-              {formError && (
-                <div style={{
-                  backgroundColor: "rgba(239, 68, 68, 0.1)",
-                  border: "1px solid rgba(239, 68, 68, 0.2)",
-                  borderRadius: "8px",
-                  padding: "10px",
-                  color: "hsl(var(--destructive))",
-                  fontSize: "13px",
-                  marginBottom: "16px"
-                }}>
-                  {formError}
-                </div>
-              )}
-
-              {formSuccess && (
-                <div style={{
-                  backgroundColor: "rgba(16, 185, 129, 0.1)",
-                  border: "1px solid rgba(16, 185, 129, 0.2)",
-                  borderRadius: "8px",
-                  padding: "10px",
-                  color: "hsl(var(--success))",
-                  fontSize: "13px",
-                  marginBottom: "16px"
-                }}>
-                  {formSuccess}
-                </div>
-              )}
-
-              <form onSubmit={handleCreatePermit}>
-                <div style={{ marginBottom: "16px" }}>
-                  <label style={{ display: "block", fontSize: "13px", fontWeight: 500, marginBottom: "6px" }}>
-                    Judul Pekerjaan
-                  </label>
-                  <input
-                    type="text"
-                    className="premium-input"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="Contoh: Perbaikan AC Server"
-                    required
-                  />
-                </div>
-
-                <div style={{ marginBottom: "16px" }}>
-                  <label style={{ display: "block", fontSize: "13px", fontWeight: 500, marginBottom: "6px" }}>
-                    Deskripsi Pekerjaan
-                  </label>
-                  <textarea
-                    className="premium-input"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Jelaskan detail pekerjaan"
-                    rows={4}
-                    style={{ resize: "none" }}
-                    required
-                  />
-                </div>
-
-                <div style={{ marginBottom: "24px" }}>
-                  <label style={{ display: "block", fontSize: "13px", fontWeight: 500, marginBottom: "6px" }}>
-                    Tanggal Pelaksanaan
-                  </label>
-                  <input
-                    type="date"
-                    className="premium-input"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    required
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="premium-btn"
-                  style={{ width: "100%" }}
-                  disabled={formLoading}
-                >
-                  {formLoading ? "Mengirim..." : "Kirim Pengajuan"}
-                </button>
-              </form>
-            </section>
+            <PermitForm
+              title={title}
+              setTitle={setTitle}
+              description={description}
+              setDescription={setDescription}
+              date={date}
+              setDate={setDate}
+              formError={formError}
+              formSuccess={formSuccess}
+              formLoading={formLoading}
+              onSubmit={handleCreatePermit}
+            />
           )}
 
-          <section className="premium-card" style={{ width: "100%" }}>
-            <h3 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "24px", display: "flex", alignItems: "center", gap: "8px" }}>
-              <ClipboardList size={18} style={{ color: "hsl(var(--primary))" }} />
-              {isAdmin ? "Seluruh Pengajuan Izin Kerja" : "Pengajuan Izin Saya"}
-            </h3>
-
-            {permitsError && (
-              <p style={{ color: "hsl(var(--destructive))" }}>Gagal memuat data pengajuan.</p>
-            )}
-
-            {!permits ? (
-              <p style={{ color: "hsl(var(--muted-foreground))" }}>Memuat daftar pengajuan...</p>
-            ) : permits.length === 0 ? (
-              <div style={{
-                textAlign: "center",
-                padding: "48px 24px",
-                color: "hsl(var(--muted-foreground))"
-              }}>
-                <FileText size={48} style={{ opacity: 0.2, marginBottom: "16px" }} />
-                <p>Belum ada pengajuan izin kerja.</p>
-              </div>
-            ) : (
-              <div style={{ overflowX: "auto" }}>
-                <table style={{
-                  width: "100%",
-                  borderCollapse: "collapse",
-                  textAlign: "left"
-                }}>
-                  <thead>
-                    <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-                      {isAdmin && <th style={{ padding: "12px 16px", fontSize: "14px", fontWeight: 600 }}>Pemohon</th>}
-                      <th style={{ padding: "12px 16px", fontSize: "14px", fontWeight: 600 }}>Pekerjaan</th>
-                      <th style={{ padding: "12px 16px", fontSize: "14px", fontWeight: 600 }}>Deskripsi</th>
-                      <th style={{ padding: "12px 16px", fontSize: "14px", fontWeight: 600 }}>Tanggal</th>
-                      <th style={{ padding: "12px 16px", fontSize: "14px", fontWeight: 600 }}>Status</th>
-                      {isAdmin && <th style={{ padding: "12px 16px", fontSize: "14px", fontWeight: 600, textAlign: "right" }}>Aksi</th>}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {permits.map((permit) => (
-                      <tr key={permit.id} style={{
-                        borderBottom: "1px solid rgba(255,255,255,0.04)",
-                        transition: "background 0.2s"
-                      }} className="table-row-hover">
-                        {isAdmin && (
-                          <td style={{ padding: "16px", fontSize: "14px", fontWeight: 600 }}>
-                            {permit.user?.username || "Tidak diketahui"}
-                          </td>
-                        )}
-                        <td style={{ padding: "16px", fontSize: "14px", fontWeight: 600 }}>
-                          {permit.title}
-                        </td>
-                        <td style={{ padding: "16px", fontSize: "14px", color: "hsl(var(--muted-foreground))", maxWidth: "250px" }}>
-                          {permit.description}
-                        </td>
-                        <td style={{ padding: "16px", fontSize: "14px" }}>
-                          {permit.date}
-                        </td>
-                        <td style={{ padding: "16px" }}>
-                          <span className={`badge badge-${permit.status.toLowerCase()}`}>
-                            {permit.status === "PENDING" && <Clock size={12} style={{ marginRight: "4px" }} />}
-                            {permit.status === "APPROVED" && <CheckCircle2 size={12} style={{ marginRight: "4px" }} />}
-                            {permit.status === "REJECTED" && <XCircle size={12} style={{ marginRight: "4px" }} />}
-                            {permit.status}
-                          </span>
-                        </td>
-                        {isAdmin && (
-                          <td style={{ padding: "16px", textAlign: "right" }}>
-                            {permit.status === "PENDING" ? (
-                              <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
-                                <button
-                                  onClick={() => handleUpdateStatus(permit.id, "APPROVED")}
-                                  style={{
-                                    background: "rgba(16, 185, 129, 0.15)",
-                                    color: "hsl(var(--success))",
-                                    border: "1px solid rgba(16, 185, 129, 0.3)",
-                                    padding: "6px 12px",
-                                    borderRadius: "6px",
-                                    fontSize: "12px",
-                                    fontWeight: 600,
-                                    cursor: "pointer",
-                                    transition: "background 0.2s"
-                                  }}
-                                >
-                                  Setujui
-                                </button>
-                                <button
-                                  onClick={() => handleUpdateStatus(permit.id, "REJECTED")}
-                                  style={{
-                                    background: "rgba(239, 68, 68, 0.15)",
-                                    color: "hsl(var(--destructive))",
-                                    border: "1px solid rgba(239, 68, 68, 0.3)",
-                                    padding: "6px 12px",
-                                    borderRadius: "6px",
-                                    fontSize: "12px",
-                                    fontWeight: 600,
-                                    cursor: "pointer",
-                                    transition: "background 0.2s"
-                                  }}
-                                >
-                                  Tolak
-                                </button>
-                              </div>
-                            ) : (
-                              <span style={{ fontSize: "12px", color: "hsl(var(--muted-foreground))" }}>
-                                Selesai ditinjau
-                              </span>
-                            )}
-                          </td>
-                        )}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </section>
+          <PermitList
+            permits={permits}
+            permitsError={!!permitsError}
+            isAdmin={isAdmin}
+            onUpdateStatus={handleUpdateStatus}
+          />
         </div>
       </main>
     </div>
