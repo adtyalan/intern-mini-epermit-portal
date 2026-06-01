@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Mini E-Permit System",
-  description: "Sistem Pengajuan Izin Kerja Sederhana berskala Premium",
+  description: "Sistem pengajuan izin kerja sederhana yang clean dan minimalis bergaya shadcn/ui.",
 };
 
 export default function RootLayout({

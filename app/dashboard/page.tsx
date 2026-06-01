@@ -7,6 +7,7 @@ import cookies from "js-cookie";
 import { Header } from "@/components/Header";
 import { PermitForm } from "@/components/PermitForm";
 import { PermitList } from "@/components/PermitList";
+import { Dialog } from "@/components/Dialog";
 
 interface UserSession {
   id: string;
@@ -31,14 +32,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 export default function DashboardPage() {
   const router = useRouter();
   const [session, setSession] = useState<UserSession | null>(null);
-
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
-
-  const [formLoading, setFormLoading] = useState(false);
-  const [formError, setFormError] = useState("");
-  const [formSuccess, setFormSuccess] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const rawSession = cookies.get("user_session");
@@ -64,59 +58,10 @@ export default function DashboardPage() {
     router.push("/");
   };
 
-  const handleCreatePermit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormLoading(true);
-    setFormError("");
-    setFormSuccess("");
-
-    try {
-      const res = await fetch("/api/permits", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, description, date }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setFormError(data.error || "Gagal mengirim pengajuan");
-        setFormLoading(false);
-        return;
-      }
-
-      setTitle("");
-      setDescription("");
-      setDate("");
-      setFormSuccess("Pengajuan izin berhasil dikirim!");
-      mutate("/api/permits");
-    } catch {
-      setFormError("Kesalahan jaringan");
-    } finally {
-      setFormLoading(false);
-    }
-  };
-
-  const handleUpdateStatus = async (id: string, newStatus: "APPROVED" | "REJECTED") => {
-    try {
-      const res = await fetch(`/api/permits/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
-      });
-
-      if (res.ok) {
-        mutate("/api/permits");
-      }
-    } catch (err) {
-      console.error("Gagal update status");
-    }
-  };
-
   if (!session) {
     return (
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh" }}>
-        <p style={{ color: "hsl(var(--muted-foreground))" }}>Memuat sesi...</p>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", backgroundColor: "hsl(var(--muted) / 0.2)" }}>
+        <p style={{ color: "hsl(var(--muted-foreground))", fontSize: "14px" }}>Memuat sesi...</p>
       </div>
     );
   }
@@ -124,39 +69,39 @@ export default function DashboardPage() {
   const isAdmin = session.role === "ADMIN";
 
   return (
-    <div style={{ minHeight: "100vh", paddingBottom: "64px" }}>
+    <div style={{ minHeight: "100vh", backgroundColor: "hsl(var(--muted) / 0.2)", paddingBottom: "64px" }}>
       <Header session={session} isAdmin={isAdmin} onLogout={handleLogout} />
 
-      <main className="premium-container" style={{ marginTop: "32px" }}>
+      <main className="premium-container">
         <div style={{
           display: "grid",
-          gridTemplateColumns: !isAdmin ? "1fr 2fr" : "1fr",
-          gap: "32px",
+          gridTemplateColumns: "1fr",
+          gap: "24px",
           alignItems: "start"
         }}>
-          {!isAdmin && (
-            <PermitForm
-              title={title}
-              setTitle={setTitle}
-              description={description}
-              setDescription={setDescription}
-              date={date}
-              setDate={setDate}
-              formError={formError}
-              formSuccess={formSuccess}
-              formLoading={formLoading}
-              onSubmit={handleCreatePermit}
-            />
-          )}
-
           <PermitList
             permits={permits}
             permitsError={!!permitsError}
             isAdmin={isAdmin}
-            onUpdateStatus={handleUpdateStatus}
+            onUpdateSuccess={() => mutate("/api/permits")}
+            onAddClick={!isAdmin ? () => setIsModalOpen(true) : undefined}
           />
         </div>
       </main>
+
+      {!isAdmin && (
+        <Dialog isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <PermitForm
+            onSuccess={() => {
+              mutate("/api/permits");
+              // Tutup modal otomatis setelah 1 detik notifikasi sukses tampil
+              setTimeout(() => {
+                setIsModalOpen(false);
+              }, 1000);
+            }}
+          />
+        </Dialog>
+      )}
     </div>
   );
 }

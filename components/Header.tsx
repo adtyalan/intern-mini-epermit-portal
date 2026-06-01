@@ -16,9 +16,9 @@ interface HeaderProps {
 export function Header({ session, isAdmin, onLogout }: HeaderProps) {
   return (
     <header style={{
-      background: "rgba(255, 255, 255, 0.01)",
-      backdropFilter: "blur(12px)",
-      borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
+      background: "hsl(var(--background) / 0.85)",
+      backdropFilter: "blur(8px)",
+      borderBottom: "1px solid hsl(var(--border))",
       position: "sticky",
       top: 0,
       zIndex: 50
@@ -27,22 +27,25 @@ export function Header({ session, isAdmin, onLogout }: HeaderProps) {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: "16px 24px"
+        padding: "14px 24px"
       }}>
         <div>
-          <h2 style={{ fontSize: "20px", fontWeight: 700 }}>
-            <span className="gradient-text">E-Permit Portal</span>
+          <h2>
+            <span style={{ color: "hsl(var(--foreground))", fontWeight: 600, fontSize: "18px", letterSpacing: "-0.02em" }}>
+              E-Permit Portal
+            </span>
           </h2>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
           <div style={{ textAlign: "right" }}>
-            <p style={{ fontSize: "14px", fontWeight: 600 }}>{session.username}</p>
+            <p style={{ fontSize: "14px", fontWeight: 500, color: "hsl(var(--foreground))" }}>{session.username}</p>
             <p style={{
               fontSize: "11px",
-              color: isAdmin ? "hsl(var(--primary))" : "hsl(var(--success))",
-              fontWeight: 700,
-              textTransform: "uppercase"
+              color: "hsl(var(--muted-foreground))",
+              fontWeight: 600,
+              textTransform: "uppercase",
+              letterSpacing: "0.05em"
             }}>
               {session.role}
             </p>
@@ -50,18 +53,28 @@ export function Header({ session, isAdmin, onLogout }: HeaderProps) {
           <button
             onClick={onLogout}
             style={{
-              background: "rgba(239, 68, 68, 0.1)",
-              color: "hsl(var(--destructive))",
-              border: "1px solid rgba(239, 68, 68, 0.2)",
-              padding: "8px 14px",
-              borderRadius: "8px",
+              background: "transparent",
+              color: "hsl(var(--muted-foreground))",
+              border: "1px solid hsl(var(--border))",
+              padding: "7px 12px",
+              borderRadius: "var(--radius)",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
-              gap: "8px",
+              gap: "6px",
               fontSize: "13px",
-              fontWeight: 600,
+              fontWeight: 500,
               transition: "all 0.2s"
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "hsl(var(--destructive) / 0.08)";
+              e.currentTarget.style.color = "hsl(var(--destructive))";
+              e.currentTarget.style.borderColor = "hsl(var(--destructive) / 0.2)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "transparent";
+              e.currentTarget.style.color = "hsl(var(--muted-foreground))";
+              e.currentTarget.style.borderColor = "hsl(var(--border))";
             }}
           >
             <LogOut size={14} />

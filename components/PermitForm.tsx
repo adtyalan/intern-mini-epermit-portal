@@ -1,44 +1,70 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import { Plus } from "lucide-react";
 
 interface PermitFormProps {
-  title: string;
-  setTitle: (val: string) => void;
-  description: string;
-  setDescription: (val: string) => void;
-  date: string;
-  setDate: (val: string) => void;
-  formError: string;
-  formSuccess: string;
-  formLoading: boolean;
-  onSubmit: (e: React.FormEvent) => void;
+  onSuccess?: () => void;
 }
 
-export function PermitForm({
-  title,
-  setTitle,
-  description,
-  setDescription,
-  date,
-  setDate,
-  formError,
-  formSuccess,
-  formLoading,
-  onSubmit,
-}: PermitFormProps) {
+export function PermitForm({ onSuccess }: PermitFormProps) {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [date, setDate] = useState("");
+
+  const [formLoading, setFormLoading] = useState(false);
+  const [formError, setFormError] = useState("");
+  const [formSuccess, setFormSuccess] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormLoading(true);
+    setFormError("");
+    setFormSuccess("");
+
+    try {
+      const res = await fetch("/api/permits", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, description, date }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setFormError(data.error || "Gagal mengirim pengajuan");
+        setFormLoading(false);
+        return;
+      }
+
+      setTitle("");
+      setDescription("");
+      setDate("");
+      setFormSuccess("Pengajuan izin berhasil dikirim!");
+
+      if (onSuccess) {
+        onSuccess();
+      }
+    } catch {
+      setFormError("Kesalahan jaringan");
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
   return (
-    <section className="premium-card">
-      <h3 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "20px", display: "flex", alignItems: "center", gap: "8px" }}>
-        <Plus size={18} style={{ color: "hsl(var(--primary))" }} />
+    <div style={{ width: "100%" }}>
+      <h3 style={{ fontSize: "16px", fontWeight: 600, color: "hsl(var(--foreground))", letterSpacing: "-0.02em", marginBottom: "20px", display: "flex", alignItems: "center", gap: "8px" }}>
+        <Plus size={16} style={{ color: "hsl(var(--foreground))" }} />
         Buat Izin Baru
       </h3>
 
       {formError && (
         <div style={{
-          backgroundColor: "rgba(239, 68, 68, 0.1)",
-          border: "1px solid rgba(239, 68, 68, 0.2)",
-          borderRadius: "8px",
-          padding: "10px",
+          backgroundColor: "hsl(var(--destructive) / 0.08)",
+          border: "1px solid hsl(var(--destructive) / 0.2)",
+          borderRadius: "var(--radius)",
+          padding: "10px 14px",
           color: "hsl(var(--destructive))",
           fontSize: "13px",
           marginBottom: "16px"
@@ -49,10 +75,10 @@ export function PermitForm({
 
       {formSuccess && (
         <div style={{
-          backgroundColor: "rgba(16, 185, 129, 0.1)",
-          border: "1px solid rgba(16, 185, 129, 0.2)",
-          borderRadius: "8px",
-          padding: "10px",
+          backgroundColor: "hsl(142.1 76.2% 36.3% / 0.08)",
+          border: "1px solid hsl(142.1 76.2% 36.3% / 0.2)",
+          borderRadius: "var(--radius)",
+          padding: "10px 14px",
           color: "hsl(var(--success))",
           fontSize: "13px",
           marginBottom: "16px"
@@ -61,9 +87,9 @@ export function PermitForm({
         </div>
       )}
 
-      <form onSubmit={onSubmit}>
+      <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: "16px" }}>
-          <label style={{ display: "block", fontSize: "13px", fontWeight: 500, marginBottom: "6px" }}>
+          <label style={{ display: "block", fontSize: "13px", fontWeight: 500, marginBottom: "6px", color: "hsl(var(--foreground))" }}>
             Judul Pekerjaan
           </label>
           <input
@@ -77,7 +103,7 @@ export function PermitForm({
         </div>
 
         <div style={{ marginBottom: "16px" }}>
-          <label style={{ display: "block", fontSize: "13px", fontWeight: 500, marginBottom: "6px" }}>
+          <label style={{ display: "block", fontSize: "13px", fontWeight: 500, marginBottom: "6px", color: "hsl(var(--foreground))" }}>
             Deskripsi Pekerjaan
           </label>
           <textarea
@@ -91,8 +117,8 @@ export function PermitForm({
           />
         </div>
 
-        <div style={{ marginBottom: "24px" }}>
-          <label style={{ display: "block", fontSize: "13px", fontWeight: 500, marginBottom: "6px" }}>
+        <div style={{ marginBottom: "20px" }}>
+          <label style={{ display: "block", fontSize: "13px", fontWeight: 500, marginBottom: "6px", color: "hsl(var(--foreground))" }}>
             Tanggal Pelaksanaan
           </label>
           <input
@@ -107,12 +133,12 @@ export function PermitForm({
         <button
           type="submit"
           className="premium-btn"
-          style={{ width: "100%" }}
+          style={{ width: "100%", padding: "10px", fontWeight: 600 }}
           disabled={formLoading}
         >
           {formLoading ? "Mengirim..." : "Kirim Pengajuan"}
         </button>
       </form>
-    </section>
+    </div>
   );
 }
