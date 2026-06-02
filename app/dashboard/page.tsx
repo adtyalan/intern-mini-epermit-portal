@@ -60,8 +60,8 @@ export default function DashboardPage() {
 
   if (!session) {
     return (
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", backgroundColor: "hsl(var(--muted) / 0.2)" }}>
-        <p style={{ color: "hsl(var(--muted-foreground))", fontSize: "14px" }}>Memuat sesi...</p>
+      <div className="flex items-center justify-center min-h-screen bg-muted/20">
+        <p className="text-muted-foreground text-sm">Memuat sesi...</p>
       </div>
     );
   }
@@ -69,16 +69,11 @@ export default function DashboardPage() {
   const isAdmin = session.role === "ADMIN";
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "hsl(var(--muted) / 0.2)", paddingBottom: "64px" }}>
+    <div className="min-h-screen bg-muted/20 pb-16">
       <Header session={session} isAdmin={isAdmin} onLogout={handleLogout} />
 
-      <main className="premium-container">
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "1fr",
-          gap: "24px",
-          alignItems: "start"
-        }}>
+      <main className="max-w-[1200px] w-full mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 gap-6 items-start">
           <PermitList
             permits={permits}
             permitsError={!!permitsError}

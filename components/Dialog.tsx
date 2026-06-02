@@ -23,96 +23,27 @@ export function Dialog({ isOpen, onClose, children }: DialogProps) {
   if (!isOpen) return null;
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 100,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "20px"
-      }}
-    >
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-5">
       {/* Overlay Gelap Transparan dengan Blur */}
       <div
         onClick={onClose}
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundColor: "rgba(9, 9, 11, 0.4)", // zinc-950 dengan opacity
-          backdropFilter: "blur(4px)",
-          WebkitBackdropFilter: "blur(4px)",
-          transition: "opacity 0.2s ease"
-        }}
+        className="absolute inset-0 bg-zinc-950/40 backdrop-blur-[4px] transition-opacity duration-200"
       />
 
       {/* Card Dialog */}
-      <div
-        className="premium-card"
-        style={{
-          position: "relative",
-          width: "100%",
-          maxWidth: "460px",
-          backgroundColor: "hsl(var(--card))",
-          border: "1px solid hsl(var(--border))",
-          borderRadius: "var(--radius)",
-          boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
-          padding: "28px",
-          zIndex: 110,
-          animation: "scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)"
-        }}
-      >
+      <div className="relative w-full max-w-[460px] p-7 bg-card border border-border rounded-lg shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1),0_8px_10px_-6px_rgba(0,0,0,0.1)] z-[110] animate-[scaleIn_0.2s_ease-out]">
         {/* Tombol Close 'X' */}
         <button
           onClick={onClose}
-          style={{
-            position: "absolute",
-            top: "16px",
-            right: "16px",
-            background: "transparent",
-            border: "none",
-            color: "hsl(var(--muted-foreground))",
-            cursor: "pointer",
-            padding: "4px",
-            borderRadius: "4px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            transition: "all 0.2s"
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "hsl(var(--muted))";
-            e.currentTarget.style.color = "hsl(var(--foreground))";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "transparent";
-            e.currentTarget.style.color = "hsl(var(--muted-foreground))";
-          }}
+          className="absolute top-4 right-4 bg-transparent border-none text-muted-foreground cursor-pointer p-1 rounded-md flex items-center justify-center hover:bg-muted hover:text-foreground transition-all duration-200"
           aria-label="Tutup"
         >
           <X size={16} />
         </button>
 
         {/* Konten */}
-        <div>
-          {children}
-        </div>
+        <div>{children}</div>
       </div>
-
-      {/* Inject styling keyframe untuk scaleIn */}
-      <style jsx global>{`
-        @keyframes scaleIn {
-          from {
-            opacity: 0;
-            transform: scale(0.95);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-      `}</style>
     </div>
   );
 }

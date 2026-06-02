@@ -1,4 +1,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  
+  --color-success: hsl(var(--success));
+  --color-warning: hsl(var(--warning));
+  
+  --radius-lg: var(--radius);
+}
 
 :root {
   --background: 0 0% 100%;
@@ -8,7 +44,6 @@
   --popover: 0 0% 100%;
   --popover-foreground: 240 10% 3.9%;
   
-  /* Primary menggunakan zinc-900 (hitam matte / abu-abu sangat gelap) khas shadcn */
   --primary: 240 5.9% 10%;
   --primary-foreground: 0 0% 98%;
   
@@ -31,160 +66,18 @@
   --success: 142.1 76.2% 36.3%;
   --warning: 47.9 95.8% 43.1%;
   
-  --radius: 8px; /* 0.5rem khas shadcn */
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+  --radius: 8px;
 }
 
 body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-button, input, textarea, select {
-  font-family: inherit;
-}
-
-.premium-container {
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 32px 24px;
-}
-
-/* Card khas shadcn: border 1px solid, shadow sangat tipis, latar solid */
-.premium-card {
-  background-color: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
-  border-radius: var(--radius);
-  padding: 28px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-.premium-card:hover {
-  border-color: hsl(var(--border) / 1.5);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-}
-
-/* Gradient text diubah menjadi warna solid primary yang clean */
-.gradient-text {
-  color: hsl(var(--foreground));
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-/* Tombol flat solid hitam/zinc tua khas shadcn */
-.premium-btn {
-  background-color: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
-  border: 1px solid transparent;
-  border-radius: var(--radius);
-  padding: 10px 16px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.1s ease;
-}
-
-.premium-btn:hover {
-  background-color: hsl(var(--primary) / 0.9);
-}
-
-.premium-btn:active {
-  transform: scale(0.98);
-}
-
-.premium-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Input minimalis dengan border tipis khas shadcn */
-.premium-input {
-  width: 100%;
-  background-color: hsl(var(--background));
-  border: 1px solid hsl(var(--border));
-  border-radius: var(--radius);
-  padding: 10px 14px;
-  font-size: 14px;
-  color: hsl(var(--foreground));
-  outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.premium-input::placeholder {
-  color: hsl(var(--muted-foreground));
-}
-
-.premium-input:focus {
-  border-color: hsl(var(--ring));
-  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.1);
-}
-
-/* Badge minimalis dengan warna pastel/subtle */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  border-radius: 9999px;
-  padding: 2px 10px;
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: capitalize;
-  letter-spacing: normal;
-  border: 1px solid transparent;
-}
-
-.badge-pending {
-  background-color: hsl(47.9 95.8% 43.1% / 0.08);
-  color: hsl(var(--warning));
-  border-color: hsl(47.9 95.8% 43.1% / 0.2);
-}
-
-.badge-approved {
-  background-color: hsl(142.1 76.2% 36.3% / 0.08);
-  color: hsl(var(--success));
-  border-color: hsl(142.1 76.2% 36.3% / 0.2);
-}
-
-.badge-rejected {
-  background-color: hsl(0 84.2% 60.2% / 0.08);
-  color: hsl(var(--destructive));
-  border-color: hsl(0 84.2% 60.2% / 0.2);
-}
-
-/* Aksen baris tabel hover yang sangat halus */
-.table-row-hover:hover {
-  background-color: hsl(var(--muted) / 0.5);
-}
-
-/* Custom Scrollbar minimalis agar selaras */
+/* Scrollbar minimalis */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -201,4 +94,16 @@ button, input, textarea, select {
 
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Keyframes untuk modal dialog scaleIn (Tailwind v4) */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

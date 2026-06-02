@@ -16,14 +16,7 @@ export default function LoginPage() {
   }, [router]);
 
   return (
-    <div style={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      minHeight: "100vh",
-      padding: "24px",
-      backgroundColor: "hsl(var(--muted) / 0.3)"
-    }}>
+    <div className="flex items-center justify-center min-h-screen p-6 bg-muted/30">
       <LoginForm />
     </div>
   );

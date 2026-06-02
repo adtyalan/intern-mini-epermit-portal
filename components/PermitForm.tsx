@@ -53,48 +53,32 @@ export function PermitForm({ onSuccess }: PermitFormProps) {
   };
 
   return (
-    <div style={{ width: "100%" }}>
-      <h3 style={{ fontSize: "16px", fontWeight: 600, color: "hsl(var(--foreground))", letterSpacing: "-0.02em", marginBottom: "20px", display: "flex", alignItems: "center", gap: "8px" }}>
-        <Plus size={16} style={{ color: "hsl(var(--foreground))" }} />
+    <div className="w-full">
+      <h3 className="text-base font-semibold text-foreground tracking-tight mb-5 flex items-center gap-2">
+        <Plus size={16} className="text-foreground" />
         Buat Izin Baru
       </h3>
 
       {formError && (
-        <div style={{
-          backgroundColor: "hsl(var(--destructive) / 0.08)",
-          border: "1px solid hsl(var(--destructive) / 0.2)",
-          borderRadius: "var(--radius)",
-          padding: "10px 14px",
-          color: "hsl(var(--destructive))",
-          fontSize: "13px",
-          marginBottom: "16px"
-        }}>
+        <div className="bg-destructive/8 border border-destructive/20 rounded-lg p-3.5 text-destructive text-sm mb-4">
           {formError}
         </div>
       )}
 
       {formSuccess && (
-        <div style={{
-          backgroundColor: "hsl(142.1 76.2% 36.3% / 0.08)",
-          border: "1px solid hsl(142.1 76.2% 36.3% / 0.2)",
-          borderRadius: "var(--radius)",
-          padding: "10px 14px",
-          color: "hsl(var(--success))",
-          fontSize: "13px",
-          marginBottom: "16px"
-        }}>
+        <div className="bg-success/8 border border-success/20 rounded-lg p-3.5 text-success text-sm mb-4">
           {formSuccess}
         </div>
       )}
 
       <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: "16px" }}>
-          <label style={{ display: "block", fontSize: "13px", fontWeight: 500, marginBottom: "6px", color: "hsl(var(--foreground))" }}>
+        <div className="mb-4">
+          <label className="block text-[13px] font-medium text-foreground mb-1.5">
             Judul Pekerjaan
           </label>
           <input
             type="text"
-            className="premium-input"
+            className="w-full bg-background border border-border rounded-lg px-3.5 py-2 text-sm text-foreground placeholder-muted-foreground outline-none transition-all duration-200 focus:border-ring focus:ring-2 focus:ring-ring/10"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Contoh: Perbaikan AC Server"
@@ -102,28 +86,27 @@ export function PermitForm({ onSuccess }: PermitFormProps) {
           />
         </div>
 
-        <div style={{ marginBottom: "16px" }}>
-          <label style={{ display: "block", fontSize: "13px", fontWeight: 500, marginBottom: "6px", color: "hsl(var(--foreground))" }}>
+        <div className="mb-4">
+          <label className="block text-[13px] font-medium text-foreground mb-1.5">
             Deskripsi Pekerjaan
           </label>
           <textarea
-            className="premium-input"
+            className="w-full bg-background border border-border rounded-lg px-3.5 py-2 text-sm text-foreground placeholder-muted-foreground outline-none transition-all duration-200 focus:border-ring focus:ring-2 focus:ring-ring/10 resize-none"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Jelaskan detail pekerjaan"
             rows={4}
-            style={{ resize: "none" }}
             required
           />
         </div>
 
-        <div style={{ marginBottom: "20px" }}>
-          <label style={{ display: "block", fontSize: "13px", fontWeight: 500, marginBottom: "6px", color: "hsl(var(--foreground))" }}>
+        <div className="mb-5">
+          <label className="block text-[13px] font-medium text-foreground mb-1.5">
             Tanggal Pelaksanaan
           </label>
           <input
             type="date"
-            className="premium-input"
+            className="w-full bg-background border border-border rounded-lg px-3.5 py-2 text-sm text-foreground placeholder-muted-foreground outline-none transition-all duration-200 focus:border-ring focus:ring-2 focus:ring-ring/10"
             value={date}
             onChange={(e) => setDate(e.target.value)}
             required
@@ -132,8 +115,7 @@ export function PermitForm({ onSuccess }: PermitFormProps) {
 
         <button
           type="submit"
-          className="premium-btn"
-          style={{ width: "100%", padding: "10px", fontWeight: 600 }}
+          className="w-full py-2.5 text-sm font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
           disabled={formLoading}
         >
           {formLoading ? "Mengirim..." : "Kirim Pengajuan"}
